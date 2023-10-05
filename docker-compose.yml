@@ -1,0 +1,43 @@
+# version: "3.9"
+
+# services:
+#   SSO:
+#     build: ./
+#     command: ./SSO
+#     ports: -'3001:3001'
+#     depends_on: - 
+
+#   db:
+#     image: postgres:latest
+#     volumes:
+#       - db:/var/lib/postgresql/data
+#     enivronment:
+#       - POSTGRES_PASSWORD=qwerty
+#     ports: -5432:5432
+
+
+
+#       - ./init.sql:/var/lib/postgresql/data
+
+version: "3.9"
+services:
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+  server:
+    build: ./
+    depends_on:
+      - database
+    restart: always
+    networks:
+      - default
+    ports:
+    - "3001:3001"
+volumes:
+  data:
